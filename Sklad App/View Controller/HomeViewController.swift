@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Alamofire
+import SwiftyJSON
 
 class HomeViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout  {
     
@@ -19,7 +21,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         super.viewDidLoad()
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "menu"), style: .plain, target: self, action: #selector(menuButton(_:)))
-
+        
         collectionView.delegate = self
         collectionView.dataSource = self
     }
@@ -34,11 +36,39 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         menuViewController.transitioningDelegate = self
         present(menuViewController, animated: true)
         
+        fetchAllIncomings()
+        
+        
     }
+    //==================
+    
+    func fetchAllIncomings() {
+        guard let url = URL(string: "http://192.168.0.106:8080/companies/1") else {
+            return
+        }
+        
+        guard let url1 = URL(string: "https://api.myjson.com/bins/mofc4") else{return}
+        Alamofire.request(url1,
+                          method: .get)
+            .validate()
+            .responseJSON { response in
+                guard response.result.isSuccess else {
+                    print("Error while fetching data")
+                    return
+                }
+                
+                let swiftyJsonVar = JSON(response.result.value!)
+                print(swiftyJsonVar)
+                //print(swiftyJsonVar[0]["attribute_name"].string!)
+        }
+    }
+    
+    
+    //==========
     
     func transitionToNew(_ menuType: MenuType) {
         let title = String(describing: menuType).capitalized
-         self.title = title
+        self.title = title
         
         topView?.removeFromSuperview()
         switch menuType {
@@ -79,5 +109,5 @@ extension HomeViewController: UIViewControllerTransitioningDelegate {
         transition.isPresenting = false
         return transition
     }
-
+    
 }
