@@ -29,7 +29,6 @@ class LoginViewController: UIViewController {
         //Login Button
        /* loginButton.layer.cornerRadius = loginButton.layer.frame.height/2
         */
-        //dsdsd
         
     }
     

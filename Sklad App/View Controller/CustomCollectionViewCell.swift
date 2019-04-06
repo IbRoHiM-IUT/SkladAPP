@@ -24,7 +24,6 @@ class CustomCollectionViewCell: UICollectionViewCell {
     func setup() {
         self.layer.borderWidth = 1.0
         self.layer.cornerRadius = 5.0
-        //dsms
-        
+        //dcdjsckdsjnckjdsc
     }
 }
