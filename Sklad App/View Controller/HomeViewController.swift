@@ -14,11 +14,19 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     @IBOutlet var collectionView: UICollectionView!
     
+    fileprivate let padding: CGFloat = 16
+    
     let transition = SlideInTransition()
     var topView: UIView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //layout customization
+        if let collectionLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            collectionLayout.sectionInset = .init(top: padding, left: padding, bottom: padding, right: padding)
+        }
+        
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "menu"), style: .plain, target: self, action: #selector(menuButton(_:)))
         
@@ -36,7 +44,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         menuViewController.transitioningDelegate = self
         present(menuViewController, animated: true)
         
-        fetchAllIncomings()
+        //fetchAllIncomings()
         
         
     }
@@ -91,9 +99,13 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCustomCollectionCell", for: indexPath) as! MyCustomCollectionCell
         // Do any custom modifications you your cell, referencing the outlets you defined in the Custom cell file.
         cell.backgroundColor = UIColor.orange
-        cell.label.text = "item \(indexPath.item)"
+        cell.label.text = "item kjdsckjdsnckdsjbcdkjsbcksdjc\(indexPath.item)"
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return .init(width: view.frame.width, height: 50)
     }
     
     
