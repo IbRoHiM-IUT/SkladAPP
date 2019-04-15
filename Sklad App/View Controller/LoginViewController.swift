@@ -12,7 +12,6 @@ class LoginViewController: UIViewController {
 
     @IBOutlet var username: UITextField!
     @IBOutlet var password: UITextField!
-    var loginButton: UIButton!
     
     
     override func viewDidLoad() {
@@ -26,17 +25,12 @@ class LoginViewController: UIViewController {
         username.layer.cornerRadius = username.layer.frame.height/2
         password.layer.cornerRadius = password.layer.frame.height/2
         
-        //Login Button
-       /* loginButton.layer.cornerRadius = loginButton.layer.frame.height/2
-        */
-        
     }
     
     @IBAction func loginButton(_ sender: UIButton) {
         
+        
     }
     
     
-    
-
 }

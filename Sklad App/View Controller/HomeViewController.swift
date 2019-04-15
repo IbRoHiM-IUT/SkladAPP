@@ -10,53 +10,35 @@ import UIKit
 import Alamofire
 import SwiftyJSON
 
-class HomeViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout  {
+class HomeViewController: BaseMenuController, UITableViewDelegate, UITableViewDataSource {
     
-    @IBOutlet var collectionView: UICollectionView!
+    @IBOutlet var menuButton: UIBarButtonItem!
+    @IBOutlet var tableView: UITableView!
     
-    fileprivate let padding: CGFloat = 16
-    
-    let transition = SlideInTransition()
-    var topView: UIView?
+    var products: [Product] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //layout customization
-        if let collectionLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            collectionLayout.sectionInset = .init(top: padding, left: padding, bottom: padding, right: padding)
-        }
+       
         
+//        navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "menu"), style: .plain, target: self, action: #selector(menuButton(_:)))
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "menu"), style: .plain, target: self, action: #selector(menuButton(_:)))
+        products = createProductArray()
         
-        collectionView.delegate = self
-        collectionView.dataSource = self
+        tableView.delegate = self
+        tableView.dataSource = self
     }
     
-    @IBAction func menuButton(_ sender: UIBarButtonItem) {
-        guard let menuViewController = storyboard?.instantiateViewController(withIdentifier: "MenuViewController") as? MenuViewController else { return }
-        menuViewController.didTapMenuType = { menuType in
-            print(menuType)
-            self.transitionToNew(menuType)
-        }
-        menuViewController.modalPresentationStyle = .overCurrentContext
-        menuViewController.transitioningDelegate = self
-        present(menuViewController, animated: true)
-        
-        //fetchAllIncomings()
-        
-        
-    }
+    
     //==================
-    
     func fetchAllIncomings() {
         guard let url = URL(string: "http://192.168.0.106:8080/companies/1") else {
             return
         }
         
-        guard let url1 = URL(string: "https://api.myjson.com/bins/mofc4") else{return}
-        Alamofire.request(url1,
+//        guard let url1 = URL(string: "https://api.myjson.com/bins/mofc4") else{return}
+        Alamofire.request(url,
                           method: .get)
             .validate()
             .responseJSON { response in
@@ -70,56 +52,45 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
                 //print(swiftyJsonVar[0]["attribute_name"].string!)
         }
     }
+   
     
-    
-    //==========
-    
-    func transitionToNew(_ menuType: MenuType) {
-        let title = String(describing: menuType).capitalized
-        self.title = title
+    func createProductArray() -> [Product]{
+        var tempArray: [Product] = []
         
-        topView?.removeFromSuperview()
-        switch menuType {
-        case .ostatok:
-            let view = UIView()
-            view.backgroundColor = .yellow
-            view.frame = self.view.bounds
-            self.view.addSubview(view)
-            self.topView = view
-        default:
-            break
-        }
+        let product1 = Product(numberProduct: 1, productName: "DISK DAMAS QORA 12", totalQuantity: 2244, sklad: "OSNOVNOY", quantity: 2244)
+        let product2 = Product(numberProduct: 2, productName: "AUSTONE 295/80R22.5 AT115", totalQuantity: 2244, sklad: "Tamojniy", quantity: 2244)
+        let product3 = Product(numberProduct: 3, productName: "AUSTONE 165/80R12 RP115", totalQuantity: 2244, sklad: "Tamojniy", quantity: 2244)
+        let product4 = Product(numberProduct: 4, productName: "AUSTONE 295/80R22.5", totalQuantity: 2244, sklad: "OSNOVNOY", quantity: 2244)
+        let product5 = Product(numberProduct: 5, productName: "AUSTONE 295/80R22.5 AT115453", totalQuantity: 2244, sklad: "Tamojniy", quantity: 2244)
+        let product6 = Product(numberProduct: 6, productName: "APTANY 295/80R22.5 AT115", totalQuantity: 2244, sklad: "OSNOVNOY", quantity: 2244)
+        
+//        let product2 = Product(name: "DISK DAMAS QORA 12", quantity: 2244, storeNameTo: "OSNOVNOY", storeNameFrom: "Tamojniy", date: " 21.03.2019")
+//        let product3 = Product(name:"AUSTONE 295/80R22.5 AT115", quantity: 1894, storeNameTo: "OSNOVNOY", storeNameFrom: "Tamojniy", date: " 21.03.2019")
+//
+        tempArray.append(product1)
+        tempArray.append(product2)
+        tempArray.append(product3)
+        tempArray.append(product4)
+        tempArray.append(product5)
+        tempArray.append(product6)
+
+
+        return tempArray
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 100
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return products.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCustomCollectionCell", for: indexPath) as! MyCustomCollectionCell
-        // Do any custom modifications you your cell, referencing the outlets you defined in the Custom cell file.
-        cell.backgroundColor = UIColor.orange
-        cell.label.text = "item kjdsckjdsnckdsjbcdkjsbcksdjc\(indexPath.item)"
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
+        let product = products[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ProductCell", for: indexPath) as! TableViewCell
+        
+        cell.setProduct(product: product)
         return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return .init(width: view.frame.width, height: 50)
     }
     
     
 }
 
-extension HomeViewController: UIViewControllerTransitioningDelegate {
-    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        transition.isPresenting = true
-        return transition
-    }
-    
-    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        transition.isPresenting = false
-        return transition
-    }
-    
-}
