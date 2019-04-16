@@ -20,7 +20,6 @@ class HomeViewController: BaseMenuController, UITableViewDelegate, UITableViewDa
     override func viewDidLoad() {
         super.viewDidLoad()
         
-       
         
 //        navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "menu"), style: .plain, target: self, action: #selector(menuButton(_:)))
         
@@ -91,6 +90,9 @@ class HomeViewController: BaseMenuController, UITableViewDelegate, UITableViewDa
         return cell
     }
     
+    @IBAction func closeButtonTapped(_ sender: UIBarButtonItem) {
+        self.dismiss(animated: true, completion: nil)
+    }
     
 }
 

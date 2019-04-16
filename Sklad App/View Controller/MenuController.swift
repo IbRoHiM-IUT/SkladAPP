@@ -30,7 +30,7 @@ class MenuController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let cell = tableView.dequeueReusableCell(withIdentifier: "MenuCell") as! MenuCell
         
         cell.optionName.text = menuOptions[indexPath.row]
-        cell.optionImage.image = UIImage(named: "menu")
+        cell.optionImage.image = UIImage(named: "home")
         return cell
     }
     
